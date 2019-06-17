@@ -46,6 +46,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Handling Invalid Token, Expired Token and other Exceptions in JWT
+        if($exception instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+            return response()->json(['error'=>'Token không đúng','message'=>'Vui lòng kiểm tra lại Token!'],400);
+        }elseif($exception instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
+            return response()->json(['error'=>'Token hết hạn','message'=>'Vui lòng login lại!'],400);
+        }elseif($exception instanceof \Tymon\JWTAuth\Exceptions\JWTException){
+            return response()->json(['error'=>'There is problem with your token'],400);
+        }
         return parent::render($request, $exception);
     }
 }
